@@ -50,6 +50,13 @@ const validateBrowsers = browsers => {
     typeof browsers === "undefined" || isBrowsersQueryValid(browsers),
     `Invalid Option: '${browsers}' is not a valid browserslist query`,
   );
+
+  // Since we overwrite browserslist.defaults, let's special case
+  // when a user actually wants `defaults`.
+  if (browsers === "defaults") {
+    return browserslistDefaults;
+  }
+
   return browsers;
 };
 
@@ -176,6 +183,7 @@ const getTargets = (targets: Object = {}, options: Object = {}): Targets => {
 
   // Parse browsers target via browserslist
   const browsersquery = validateBrowsers(targets.browsers);
+
   const shouldParseBrowsers = !!targets.browsers;
   const shouldSearchForConfig =
     !options.ignoreBrowserslistConfig && !Object.keys(targets).length;
